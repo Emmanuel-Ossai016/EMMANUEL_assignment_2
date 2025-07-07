@@ -10,6 +10,7 @@ rule all:
         "results/aligned/validation.txt",
         "results/aligned/dup_metrics.txt",
         "results/aligned/dedup.bam.bai",
+        "results/raw/reference.fasta.fai",
 
 rule download_reference:
     output:
@@ -93,7 +94,15 @@ rule index_bam:
     shell:
         "samtools index {input}" 
 
-
+rule index_reference:
+    input:
+        "results/raw/reference.fasta"
+    output:
+        "results/raw/reference.fasta.fai"
+    shell:
+        """
+        samtools faidx {input}
+        """    
 
 
 
