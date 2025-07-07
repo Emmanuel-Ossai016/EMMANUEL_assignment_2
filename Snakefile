@@ -4,8 +4,8 @@ rule all:
     input: 
         "results/raw/reference.fasta",
         "results/raw/SRR1972739.fastq",
-    
- 
+        "results/qc/SRR1972739_fastqc.zip",
+
 rule download_reference:
     output:
          reference_fasta = "results/raw/reference.fasta"
@@ -24,3 +24,19 @@ rule download_reads:
         fastq-dump -X 10000 --split-3 --outdir results/raw/ results/raw/SRR1972739
         mv results/raw/SRR1972739_1.fastq {output}
         """
+
+rule run_fastqc:
+    input:
+        "results/raw/SRR1972739.fastq"
+    output:
+        "results/qc/SRR1972739_fastqc.zip"
+    shell:
+        """
+        echo Running FastQC...
+        fastqc -o results/qc {input}
+        echo FastQC completed!
+        """
+
+
+
+
