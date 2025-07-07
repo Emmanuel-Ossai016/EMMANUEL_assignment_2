@@ -7,6 +7,7 @@ rule all:
         "results/qc/SRR1972739_fastqc.zip",
         "results/aligned/aligned.sam",
         "results/aligned/aligned.sorted.bam",
+        "results/aligned/validation.txt",
 
 rule download_reference:
     output:
@@ -61,6 +62,15 @@ rule sam_to_sorted_bam:
         samtools view -b {input} | samtools sort -o {output}
         """
 
+rule validate_bam:
+    input:
+        "results/aligned/aligned.sorted.bam"
+    output:
+        "results/aligned/validation.txt"
+    shell:
+        """
+        gatk ValidateSamFile -I {input} -MODE SUMMARY > {output}
+        """
 
 
 
