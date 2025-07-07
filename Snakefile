@@ -1,11 +1,15 @@
-rule hello:
+# Assignment 2: Snakefile for Bioinformatics Pipeline
+ 
+rule all:
+    input: 
+        "results/raw/reference.fasta",
+    
+ 
+rule download_reference:
     output:
-        "hello.txt"
+         reference_fasta = "results/raw/reference.fasta"
     shell:
-        "echo Hello World > hello.txt"
-
-rule goodbye:
-    output:
-        "goodbye.txt"
-    shell:
-        "echo Goodbye World > goodbye.txt"
+        """
+        echo Downloading reference genome...
+        efetch -db nucleotide -id AF086833.2 -format fasta > {output}
+        """
