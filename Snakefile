@@ -9,7 +9,7 @@ rule all:
         "results/aligned/aligned.sorted.bam",
         "results/aligned/validation.txt",
         "results/aligned/dup_metrics.txt",
-        
+        "results/aligned/dedup.bam.bai",
 
 rule download_reference:
     output:
@@ -85,7 +85,13 @@ rule mark_duplicates:
         gatk MarkDuplicates -I {input} -O {output.bam} -M {output.metrics}
         """
     
-
+rule index_bam:
+    input:
+        "results/aligned/dedup.bam"
+    output:
+        "results/aligned/dedup.bam.bai"
+    shell:
+        "samtools index {input}" 
 
 
 
