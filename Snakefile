@@ -5,6 +5,7 @@ rule all:
         "results/raw/reference.fasta",
         "results/raw/SRR1972739.fastq",
         "results/qc/SRR1972739_fastqc.zip",
+        "results/aligned/aligned.sam",
 
 rule download_reference:
     output:
@@ -37,6 +38,16 @@ rule run_fastqc:
         echo FastQC completed!
         """
 
-
+rule align_reads:
+    input:
+        ref="results/raw/reference.fasta",
+        reads="results/raw/SRR1972739.fastq"
+    output:
+        "results/aligned/aligned.sam"
+    shell:
+        """
+        bwa index {input.ref}
+        bwa mem -R '@RG\\tID:1\\tLB:lib1\\tPL:illumina\\tPU:unit1\\tSM:sample1' {input.ref} {input.reads} > {output}
+        """
 
 
