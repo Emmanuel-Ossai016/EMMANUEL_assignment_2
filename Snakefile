@@ -11,6 +11,7 @@ rule all:
         "results/aligned/dup_metrics.txt",
         "results/aligned/dedup.bam.bai",
         "results/raw/reference.fasta.fai",
+        "results/raw/reference.dict",
 
 rule download_reference:
     output:
@@ -103,6 +104,18 @@ rule index_reference:
         """
         samtools faidx {input}
         """    
+
+rule create_reference_dict:
+    input:
+        "results/raw/reference.fasta"
+    output:
+        "results/raw/reference.dict"
+    shell:
+        "gatk CreateSequenceDictionary -R {input} -O {output}"
+
+
+
+
 
 
 
