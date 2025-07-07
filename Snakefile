@@ -6,6 +6,7 @@ rule all:
         "results/raw/SRR1972739.fastq",
         "results/qc/SRR1972739_fastqc.zip",
         "results/aligned/aligned.sam",
+        "results/aligned/aligned.sorted.bam",
 
 rule download_reference:
     output:
@@ -49,5 +50,22 @@ rule align_reads:
         bwa index {input.ref}
         bwa mem -R '@RG\\tID:1\\tLB:lib1\\tPL:illumina\\tPU:unit1\\tSM:sample1' {input.ref} {input.reads} > {output}
         """
+
+rule sam_to_sorted_bam:
+    input:
+        "results/aligned/aligned.sam"
+    output:
+        "results/aligned/aligned.sorted.bam"
+    shell:
+        """
+        samtools view -b {input} | samtools sort -o {output}
+        """
+
+
+
+
+
+
+
 
 
