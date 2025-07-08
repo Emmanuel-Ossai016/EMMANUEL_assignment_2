@@ -12,6 +12,7 @@ rule all:
         "results/aligned/dedup.bam.bai",
         "results/raw/reference.fasta.fai",
         "results/raw/reference.dict",
+        "results/variants/raw_variants.vcf",
 
 rule download_reference:
     output:
@@ -113,7 +114,17 @@ rule create_reference_dict:
     shell:
         "gatk CreateSequenceDictionary -R {input} -O {output}"
 
-
+rule call_variants:
+    input:
+        bam="results/aligned/dedup.bam",
+        bai="results/aligned/dedup.bam.bai",
+        ref="results/raw/reference.fasta"
+    output:
+        "results/variants/raw_variants.vcf"
+    shell:
+        """
+        gatk HaplotypeCaller -R {input.ref} -I {input.bam} -O {output}
+        """ 
 
 
 
