@@ -8,6 +8,7 @@ rule all:
         "results/aligned/aligned.sam",
         "results/aligned/aligned.sorted.bam",
         "results/aligned/validation.txt",
+        "results/aligned/dedup.bam",
         "results/aligned/dup_metrics.txt",
         "results/aligned/dedup.bam.bai",
         "results/raw/reference.fasta.fai",
