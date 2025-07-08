@@ -13,6 +13,7 @@ rule all:
         "results/raw/reference.fasta.fai",
         "results/raw/reference.dict",
         "results/variants/raw_variants.vcf",
+        "results/variants/filtered_variants.vcf"
 
 rule download_reference:
     output:
@@ -126,7 +127,21 @@ rule call_variants:
         gatk HaplotypeCaller -R {input.ref} -I {input.bam} -O {output}
         """ 
 
-
+rule filter_variants:
+    input:
+        vcf="results/variants/raw_variants.vcf",
+        ref="results/raw/reference.fasta"
+    output:
+        "results/variants/filtered_variants.vcf"
+    shell:
+        """
+        gatk VariantFiltration \
+          -R {input.ref} \
+          -V {input.vcf} \
+          -O {output} \
+          --filter-expression "QD < 2.0 || FS > 60.0" \
+          --filter-name FILTER
+        """        
 
 
 
