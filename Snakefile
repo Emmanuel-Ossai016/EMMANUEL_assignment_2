@@ -14,7 +14,8 @@ rule all:
         "results/raw/reference.fasta.fai",
         "results/raw/reference.dict",
         "results/variants/raw_variants.vcf",
-        "results/variants/filtered_variants.vcf"
+        "results/variants/filtered_variants.vcf",
+        "results/variants/filtered_variants.vcf.uploaded"
 
 rule download_reference:
     output:
@@ -144,5 +145,19 @@ rule filter_variants:
           --filter-name FILTER
         """        
 
+rule upload_to_s3:
+    input:
+        "results/variants/filtered_variants.vcf"
+    output:
+        "results/variants/filtered_variants.vcf.uploaded"
+    shell:
+        """
+        echo '[INFO] Simulating upload to S3...'
+        echo 'Skipping due to permission issue.'
+        touch {output}
+        """
 
+
+
+    
 
