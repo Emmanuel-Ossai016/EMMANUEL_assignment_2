@@ -15,6 +15,7 @@ rule all:
         "results/variants/filtered_variants.vcf",
         "results/snpEff/data/reference_db/genes.gbk",
         "results/snpEff/snpEff.config",
+        
        
 rule download_reference:
     output:
@@ -151,3 +152,4 @@ rule build_snpeff_config:
 reference_db.fa : {fasta}
 reference_db.genbank : {genbank}
 """)
+
