@@ -16,6 +16,7 @@ rule all:
         "results/snpEff/data/reference_db/genes.gbk",
         "results/snpEff/snpEff.config",
         "results/snpEff/snpEff_reference_db.txt",
+        "results/annotated/annotated_variants.vcf",
         
        
 rule download_reference:
@@ -165,3 +166,18 @@ rule build_snpeff_db:
         snpEff build -c {input.config} -genbank -v -noCheckProtein reference_db
         snpEff dump -c {input.config} reference_db > {output}
         """
+
+rule annotate_variants:
+    input:
+        config="results/snpEff/snpEff.config",
+        db="results/snpEff/snpEff_reference_db.txt",
+        vcf="results/variants/filtered_variants.vcf"
+    output:
+        vcf="results/annotated/annotated_variants.vcf",
+        folder=directory("results/annotated")
+    shell:
+        """
+        mkdir -p results/annotated
+        snpEff -c {input.config} -stats results/snpEff/snpEff.html reference_db {input.vcf} > {output.vcf}
+        """
+
