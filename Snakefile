@@ -17,6 +17,7 @@ rule all:
         "results/snpEff/snpEff.config",
         "results/snpEff/snpEff_reference_db.txt",
         "results/annotated/annotated_variants.vcf",
+        "results/s3_upload.done"
         
        
 rule download_reference:
@@ -181,3 +182,23 @@ rule annotate_variants:
         snpEff -c {input.config} -stats results/snpEff/snpEff.html reference_db {input.vcf} > {output.vcf}
         """
 
+rule upload_to_s3:
+    input:
+        [
+            "results/raw/reference.fasta",
+            "results/qc/SRR1972739_fastqc.zip",
+            "results/aligned/dedup.bam",
+            "results/variants/filtered_variants.vcf",
+            "results/annotated/annotated_variants.vcf"
+        ]
+    output:
+        "results/s3_upload.done"
+    shell:
+        """
+        for folder in raw qc aligned variants annotated; do
+            find results/$folder -type f | while read file; do
+                aws s3 cp "$file" s3://emmanuelassignment2/$folder/
+            done
+        done
+        touch {output[0]}
+    """
