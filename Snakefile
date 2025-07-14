@@ -15,6 +15,7 @@ rule all:
         "results/variants/filtered_variants.vcf",
         "results/snpEff/data/reference_db/genes.gbk",
         "results/snpEff/snpEff.config",
+        "results/snpEff/snpEff_reference_db.txt",
         
        
 rule download_reference:
@@ -153,3 +154,14 @@ reference_db.fa : {fasta}
 reference_db.genbank : {genbank}
 """)
 
+rule build_snpeff_db:
+    input:
+        config="results/snpEff/snpEff.config",
+        genbank="results/snpEff/data/reference_db/genes.gbk"
+    output:
+        "results/snpEff/snpEff_reference_db.txt"
+    shell:
+        """
+        snpEff build -c {input.config} -genbank -v -noCheckProtein reference_db
+        snpEff dump -c {input.config} reference_db > {output}
+        """
