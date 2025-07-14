@@ -14,6 +14,7 @@ rule all:
         "results/variants/raw_variants.vcf",
         "results/variants/filtered_variants.vcf",
         "results/snpEff/data/reference_db/genes.gbk",
+        "results/snpEff/snpEff.config",
        
 rule download_reference:
     output:
@@ -135,3 +136,18 @@ rule download_genbank:
         "results/snpEff/data/reference_db/genes.gbk"
     shell:
         "efetch -db nucleotide -id AF086833.2 -format genbank > {output}"
+
+rule build_snpeff_config:
+    input:
+        fasta="results/raw/reference.fasta",
+        genbank="results/snpEff/data/reference_db/genes.gbk"
+    output:
+        "results/snpEff/snpEff.config"
+    run:
+        fasta = os.path.abspath(input.fasta)
+        genbank = os.path.abspath(input.genbank)
+        with open(output[0], "w") as f:
+            f.write(f"""reference_db.genome : reference_db
+reference_db.fa : {fasta}
+reference_db.genbank : {genbank}
+""")
