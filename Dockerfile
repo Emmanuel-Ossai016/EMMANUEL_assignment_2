@@ -1,9 +1,7 @@
 FROM ubuntu:latest
 
-RUN apt update
+RUN apt update; apt upgrade -y
 
-RUN apt upgrade -y
-
-RUN apt install tree
+RUN apt install tree ranger -y
 
 CMD tree
